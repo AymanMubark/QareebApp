@@ -1,4 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">QareebApp</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -22,6 +25,13 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
         </li>
+        @if (AuthenticationService.User != null)
+        {
+            <!-- nav -->
+            <li class="nav-item px-3">
+                <NavLink href="logout" class="nav-item nav-link">Logout</NavLink>
+            </li>
+        }
     </ul>
 </div>
 
