@@ -1,35 +1,67 @@
 ﻿@page "/"
 @attribute [Authorize]
-@inject IUserService UserService
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient
+@inject IAuthenticationService authenticationService
+@implements IAsyncDisposable
 
-@*<div class="card mt-4">
-    <h4 class="card-header">You're logged in with Blazor WebAssembly & JWT!!</h4>
-    <div class="card-body">
-        <h6>Users from secure api end point</h6>
-        @if (loading)
-        {
-            <div class="spinner-border spinner-border-sm"></div>
-        }
-        @if (users != null)
-        {
-            <ul>
-                @foreach (var user in users)
-                {
-                    <li>@user.FirstName @user.LastName</li>
-                }
-            </ul>
-        }
-    </div>
+<div class="form-group">
+    <label>
+        User: @authenticationService.User.Name
+    </label>
 </div>
+<div class="form-group">
+    <label>
+        Message:
+        <input @bind="messageInput" size="50" />
+    </label>
+</div>
+<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
+
+<hr>
+
+<ul id="messagesList">
+    @foreach (var message in messages)
+    {
+        <li>@message</li>
+    }
+</ul>
 
 @code {
-    private bool loading;
-    private IEnumerable<User> users;
+    private HubConnection hubConnection;
+    private List<string> messages = new List<string>();
+    private string messageInput;
 
     protected override async Task OnInitializedAsync()
     {
-        loading = true;
-        users = await UserService.GetAll();
-        loading = false;
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(httpClient.BaseAddress.AbsoluteUri + "chathub", options =>
+            {
+                options.AccessTokenProvider = () => Task.FromResult(authenticationService.User.Token);
+            })
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var encodedMsg = $"{user}: {message}";
+            messages.Add(encodedMsg);
+            StateHasChanged();
+        });
+
+        await hubConnection.StartAsync();
     }
-}*@
+
+    async Task Send() =>
+        await hubConnection.SendAsync("SendMessage", authenticationService.User.Name, messageInput);
+
+    public bool IsConnected =>
+        hubConnection.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
