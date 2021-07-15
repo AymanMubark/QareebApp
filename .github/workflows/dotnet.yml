@@ -23,12 +23,12 @@ jobs:
       run: dotnet build --no-restore
     - name: Dotnet Publish
       run: dotnet publish -o deploy
+      # changes the base-tag in index.html from '/' to 'QareebApp' to match GitHub Pages repository subdirectory
+    - name: Change base-tag in index.html from / to QareebApp
+      run: sed -i 's/<base href="\/" \/>/<base href="\/QareebApp\/" \/>/g' /home/runner/work/QareebApp/QareebApp/deploy/wwwroot/index.html
     - name: Commit wwwroot to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: /home/runner/work/QareebApp/QareebApp/deploy/wwwroot
-    # changes the base-tag in index.html from '/' to 'QareebApp' to match GitHub Pages repository subdirectory
-    - name: Change base-tag in index.html from / to QareebApp
-      run: sed -i 's/<base href="\/" \/>/<base href="\/QareebApp\/" \/>/g' /home/runner/work/QareebApp/QareebApp/deploy/wwwroot/index.html
