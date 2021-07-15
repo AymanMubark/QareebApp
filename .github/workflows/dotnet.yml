@@ -21,8 +21,6 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
     - name: Dotnet Publish
       run: dotnet publish -o deploy
     - name: Commit wwwroot to GitHub Pages
@@ -33,4 +31,4 @@ jobs:
         FOLDER: /home/runner/work/QareebApp/QareebApp/deploy/wwwroot
     # changes the base-tag in index.html from '/' to 'QareebApp' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to QareebApp
-      run: sed -i 's/<base href="\/" \/>/<base href="\/QareebApp\/" \/>/g' release/wwwroot/index.html
+      run: sed -i 's/<base href="\/" \/>/<base href="\/QareebApp\/" \/>/g' /home/runner/work/QareebApp/QareebApp/deploy/wwwroot/index.html
