@@ -17,7 +17,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-      run: dotnet build --no-restore
     - name: Dotnet Publish
       run: dotnet publish -o deploy
       # changes the base-tag in index.html from '/' to 'QareebApp' to match GitHub Pages repository subdirectory
