@@ -31,3 +31,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
         FOLDER: /home/runner/work/QareebApp/QareebApp/deploy/wwwroot
+    # changes the base-tag in index.html from '/' to 'QareebApp' to match GitHub Pages repository subdirectory
+    - name: Change base-tag in index.html from / to QareebApp
+      run: sed -i 's/<base href="\/" \/>/<base href="\/QareebApp\/" \/>/g' release/wwwroot/index.html
