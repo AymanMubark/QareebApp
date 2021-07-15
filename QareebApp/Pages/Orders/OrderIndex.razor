@@ -1,35 +1,105 @@
 ﻿@page "/orders"
 @inject IOrderService orderService
+@inject HttpClient httpClient
+@inject IAuthenticationService authenticationService
+@implements IAsyncDisposable
+@using Qareeb.Shared.Entities
 
-    <h3>Order</h3>
-    <div class="card mt-4">
-        <h4 class="card-header">You're logged in with Blazor WebAssembly & JWT!!</h4>
-        <div class="card-body">
-            <h6>Users from secure api end point</h6>
-            @if (loading)
-            {
-                <div class="spinner-border spinner-border-sm"></div>
-            }
-            @if (orders != null)
-            {
-                <ul>
-                    @foreach (var order in orders)
-                    {
-                        <li>@order.Id</li>
-                    }
-                </ul>
-            }
-        </div>
-    </div>
-
-    @code {
-        private bool loading;
-        private IEnumerable<OrderResponse> orders;
-
-        protected override async Task OnInitializedAsync()
+<h3>Order</h3>
+<div class="card mt-4">
+    <h4 class="card-header">You're logged in with Blazor WebAssembly & JWT!!</h4>
+    <div class="card-body">
+        <h6>Users from secure api end point</h6>
+        @if (loading)
         {
-            loading = true;
-            orders = await orderService.GetOrders();
-            loading = false;
+            <div class="spinner-border spinner-border-sm"></div>
+        }
+        @if (orders != null)
+        {
+            <ul>
+                @foreach (var order in orders)
+                {
+                    <li>
+                        <button @onclick="()=>Select(order.Id)">@order.Id</button>
+                    </li>
+                }
+            </ul>
+        }
+
+        @if (selectedId != Guid.Empty)
+        {
+            <h5>Selected ID : @selectedId</h5>
+            <button class="btn btn-info m-3" @onclick="JoinOrder">
+                @(isJoin ? "UnJoin" : "Join")
+            </button>
+            @if (isJoin)
+            {
+            <button class="btn btn-primary" @onclick="ChangeOrderStatus">
+                    Change Order Status
+            </button>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private bool loading;
+    private IEnumerable<OrderResponse> orders;
+    public Guid selectedId;
+    public bool isJoin = false;
+
+    private HubConnection hubConnection;
+
+    public async Task JoinOrder()
+    {
+        await hubConnection.SendAsync("JoinOrderGroup", selectedId);
+        isJoin = true;
+        StateHasChanged();
+    }
+
+    public async Task ChangeOrderStatus()
+    {
+        await hubConnection.SendAsync("ChangeOrderStatus", selectedId, 1);
+        isJoin = true;
+        StateHasChanged();
+    }
+
+    public void Select(Guid id)
+    {
+        selectedId = id;
+    }
+
+    async Task initOrderHub()
+    {
+
+        hubConnection = new HubConnectionBuilder()
+       .WithUrl(httpClient.BaseAddress.AbsoluteUri + "hubs/OrderHub", options =>
+       {
+           options.AccessTokenProvider = () => Task.FromResult(authenticationService.User.Token);
+       })
+       .Build();
+
+        hubConnection.On<OrderStatus>("OrderStatus", (status) =>
+        {
+            Console.WriteLine($"OrderStatus  : {status}");
+        });
+        await hubConnection.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
         }
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await initOrderHub();
+
+        loading = true;
+        orders = await orderService.GetOrders();
+        loading = false;
+    }
+}

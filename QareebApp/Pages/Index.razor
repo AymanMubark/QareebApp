@@ -35,7 +35,7 @@
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(httpClient.BaseAddress.AbsoluteUri + "chathub", options =>
+            .WithUrl(httpClient.BaseAddress.AbsoluteUri + "hubs/OrderHub", options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(authenticationService.User.Token);
             })
