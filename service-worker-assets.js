@@ -113,7 +113,7 @@
       "url": "_framework\/Microsoft.AspNetCore.Components.dll"
     },
     {
-      "hash": "sha256-V2C7brE19dTbHoI9qwrAsSjVzOR2mTQphqsJGBCZ\/TI=",
+      "hash": "sha256-RcB5fZzDIayUhBuJvU1MeAkvQkDJAC8YUSucXi6eKPo=",
       "url": "_framework\/Microsoft.AspNetCore.Components.Forms.dll"
     },
     {
@@ -209,11 +209,11 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-eDumV3KdZ2zk09gb8OI0eyGfnyINw5zZG1FJzLXIBf8=",
+      "hash": "sha256-zzFA80SP0nVP3vTwysW8XTXwKPVz9Q3vfZ20mc1KJgk=",
       "url": "_framework\/Qareeb.Shared.dll"
     },
     {
-      "hash": "sha256-JTc6Pt5Y0w4LpZ\/zQJqseyvAqkYsliZy4cUd4LUikkQ=",
+      "hash": "sha256-UFICaSKKQjTbeueF4+mYyleoZzOZ8Lr\/1kLES3khgBA=",
       "url": "_framework\/QareebApp.dll"
     },
     {
@@ -241,7 +241,7 @@
       "url": "_framework\/System.Collections.dll"
     },
     {
-      "hash": "sha256-wPBNeyztJsUifYQ6Mvwfj+eEKiRsssI\/B\/ald+rMjiQ=",
+      "hash": "sha256-fdJ7njC7ZgaK9rQX0au\/IdWDls2zKOok8nw8RqBCwq4=",
       "url": "_framework\/System.ComponentModel.Annotations.dll"
     },
     {
@@ -265,7 +265,7 @@
       "url": "_framework\/System.Linq.Expressions.dll"
     },
     {
-      "hash": "sha256-F0ANNeEomxYH\/iWfDR0\/PQj28DWHKx3fAhCvjCdGQKM=",
+      "hash": "sha256-G34UJl6tfEopdXBG9MbBG7H4FcaSeHEvIekMVxk2Ztc=",
       "url": "_framework\/System.Linq.dll"
     },
     {
@@ -341,11 +341,11 @@
       "url": "_framework\/System.Web.HttpUtility.dll"
     },
     {
-      "hash": "sha256-yRk4azitGah57hXLYANpLoBkrriGsD+rDDEIWstiW\/c=",
+      "hash": "sha256-14b2NGxxm9EAIsJgCxnShow6EP\/ouL285YNPAsLstd4=",
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-LKTFLEkmtpu+0EIc3N7Hwfm2DO1\/YzUYDJvzA67JU90=",
+      "hash": "sha256-F242HT\/Rp\/VIzWeuSt6xavkLQ\/JRVwk9rWdCPztfAsc=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -353,5 +353,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "DA71O7Li"
+  "version": "RPesMu24"
 };
