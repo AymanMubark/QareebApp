@@ -21,7 +21,7 @@
                             <div class="form-group row">
                                 <label for="password" class="col-md-12 col-form-label">Password</label>
                                 <div class="col-md-12">
-                                    <InputText @bind-Value="model.Password" class="form-control" name="password" />
+                                    <InputText type="password" @bind-Value="model.Password" class="form-control" name="password" />
                                     <ValidationMessage For="@(() => model.Password)" />
                                 </div>
                             </div>

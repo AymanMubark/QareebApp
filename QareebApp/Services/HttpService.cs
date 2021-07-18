@@ -13,12 +13,13 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using static QareebApp.Services.LocalStorageService;
-
+using QareebApp.Shared;
 namespace QareebApp.Services
 {
     public interface IHttpService
     {
         Task<T> Get<T>(string uri);
+        public Task<PagedList<T>> GetListPaging<T>(string uri);
         Task<T> Post<T>(string uri, object value);
     }
 
@@ -42,22 +43,45 @@ namespace QareebApp.Services
             _configuration = configuration;
         }
 
-        public async Task<T> Get<T>(string uri)
+
+        public Task<T> Get<T>(string uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            return await sendRequest<T>(request);
+            return null;
+        }
+
+
+        public async Task<PagedList<T>> GetListPaging<T>(string uri)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            HttpResponseMessage response = await sendRequest(request);
+            if (response != null)
+            {
+                var content = await response.Content.ReadFromJsonAsync<IEnumerable<T>>();
+                MetaData MetaData = JsonSerializer.Deserialize<MetaData>(response.Headers.GetValues("X-Pagination").First());
+                var list = new PagedList<T>(content.ToList(), MetaData);
+                return list;
+            }
+            return default;
         }
 
         public async Task<T> Post<T>(string uri, object value)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
-            return await sendRequest<T>(request);
+            return await sendRequestWithData<T>(request);
         }
 
         // helper methods
 
-        private async Task<T> sendRequest<T>(HttpRequestMessage request)
+
+        private async Task<T> sendRequestWithData<T>(HttpRequestMessage request)
+        {
+            HttpResponseMessage response = await sendRequest(request);
+            var content = await response.Content.ReadFromJsonAsync<T>();
+            return content;
+        }
+        private async Task<HttpResponseMessage> sendRequest(HttpRequestMessage request)
         {
             // add jwt auth header if user is logged in and request is to the api url
             var user = await _localStorageService.GetItem<AdminUserLoginResponse>("user");
@@ -65,7 +89,7 @@ namespace QareebApp.Services
             if (user != null && isApiUrl)
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
 
-            using var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             // auto logout on 401 response
             if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -80,8 +104,9 @@ namespace QareebApp.Services
                 var error = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
                 throw new Exception(error["message"]);
             }
-
-            return await response.Content.ReadFromJsonAsync<T>();
+            return response;
         }
+
+
     }
 }

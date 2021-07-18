@@ -8,7 +8,7 @@ namespace QareebApp.Services
 {
     public interface IOrderService
     {
-        public Task<IEnumerable<OrderResponse>> GetOrders();
+        public Task<PagedList<OrderResponse>> GetOrders(PagingRequest model = null);
     }
     public class OrderService : IOrderService
     {
@@ -18,9 +18,9 @@ namespace QareebApp.Services
         {
             _httpService = httpService;
         }
-        public async Task<IEnumerable<OrderResponse>> GetOrders()
+        public async Task<PagedList<OrderResponse>> GetOrders(PagingRequest model = null)
         {
-            return await _httpService.Get<IEnumerable<OrderResponse>>("/api/Orders/all");
+            return await _httpService.GetListPaging<OrderResponse>($"/api/Orders/all?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
         }
     }
 }

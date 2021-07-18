@@ -1,17 +1,17 @@
-﻿@page "/adminusers"
-@inject IAdminUserService adminUserService
+﻿@page "/Orders"
+@inject IOrderService orderService
 <div class="card bg-white">
     <div class="card-header  d-flex justify-content-between align-items-center" style="background-color:white;">
         <h5>
             <i class="oi oi-people mr-2"></i>
-            Admin Users
+            Orders
         </h5>
         <a href="adminusers/create" class="btn ml-auto btn-sm btn-success">
             <i aria-hidden="true" class="oi oi-plus mr-2"></i> Add User
         </a>
     </div>
     <div class="card-body">
-        @if (adminUsers == null)
+        @if (orders == null)
         {
             <p><em>Loading...</em></p>
         }
@@ -28,15 +28,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in adminUsers)
+                    @foreach (var order in orders)
                     {
                         <tr>
-                            <td>@user.Name</td>
-                            <td>@user.Email</td>
-                            <td>@user.Role</td>
-                            <td>@user.CreatedOn.Value.ToShortDateString()</td>
+                            <td>@order.Code</td>
+                            <td>@order.Customer.Name</td>
+                            <td>@order.DeliveryAmount</td>
+                            <td>@order.CreatedOn.Value.ToShortDateString()</td>
                             <td class="text-right">
-                                <a href="adminUsers/edit/@user.Id" class="btn btn-light btn-sm">
+                                <a href="orders/edit/@order.Id" class="btn btn-light btn-sm">
                                     <i class="oi oi-pencil mr-1 text-info"></i> Edit
                                 </a>
                                 <button onclick="" class="btn btn-light btn-sm">
@@ -56,9 +56,12 @@
 
 @code {
     private bool loading;
-    protected IEnumerable<AdminUserReponse> adminUsers;
+    protected IEnumerable<OrderResponse> orders;
     protected MetaData MetaData = new MetaData();
-    protected PagingRequest model = new PagingRequest();
+    protected PagingRequest model = new PagingRequest()
+    {
+        PageSize = 1,
+    };
 
     private async Task SelectedPage(int page)
     {
@@ -69,8 +72,8 @@
     public async Task Load()
     {
         loading = true;
-        var reponses = await adminUserService.GetAll(model);
-        adminUsers = reponses;
+        var reponses = await orderService.GetOrders(model);
+        orders = reponses;
         MetaData = reponses.MetaData;
         loading = false;
     }
