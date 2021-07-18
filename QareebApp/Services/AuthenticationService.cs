@@ -20,9 +20,9 @@ namespace QareebApp.Services
 
     public class AuthenticationService : IAuthenticationService
     {
-        private IHttpService _httpService;
-        private NavigationManager _navigationManager;
-        private ILocalStorageService _localStorageService;
+        private readonly IHttpService _httpService;
+        private readonly NavigationManager _navigationManager;
+        private readonly ILocalStorageService _localStorageService;
 
         public AdminUserLoginResponse User { get; private set; }
 

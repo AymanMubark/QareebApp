@@ -21,7 +21,7 @@ namespace QareebApp
 
             builder.Services
                 .AddScoped<IAuthenticationService, AuthenticationService>()
-                .AddScoped<IUserService, UserService>()
+                .AddScoped<IAdminUserService, AdminUserService>()
                 .AddScoped<IOrderService, OrderService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>();
