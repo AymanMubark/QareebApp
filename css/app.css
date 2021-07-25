@@ -49,53 +49,27 @@ a, .btn-link {
     top: 0.5rem;
 }
 
-.pagging-section {
-    display: flex;
-    padding: 10px;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #3a0647;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
 }
 
-
-.pagging-numbers {
-    padding-left: 10px;
-    padding-right: 10px;
-    word-spacing: 1px;
-}
-
-/* Buttons End */
-.pagging {
-    width: 35px;
-    height: 35px;
-    background-color: #3a0647;
-    border-radius: 25px;
-    text-align: center;
-    font-size: 15px;
-    font-weight: 500;
-    direction: var(--direction-rtl);
-    color: #ffffff;
-    outline: none;
-    border: none;
-    margin: 0 3px;
-    box-shadow: 0 3px 5px 0 rgb(76 132 255 / 10%);
-    transition: all .2s ease-in-out;
-    -webkit-transition: all .2s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-}
-
-
-.pagging:focus {
-  outline: none;
-}
-
-.pagging-numbers span {
-    font-weight: 600;
-    color: #008EE0;
-}
-.active-page {
-    background-color: #05173d;
+.page-item.active .page-link {
+    z-index: 1;
     color: #fff;
-    outline: none;
+    background-color: #3a0647;
+    border-color: #3a0647;
+}
+.page-link:hover {
+    z-index: 2;
+    color: #3a0647;
+    text-decoration: none;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
 }
