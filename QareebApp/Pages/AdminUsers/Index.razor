@@ -17,7 +17,7 @@
         }
         else
         {
-            <table class="table table-responsive-sm table-borderless">
+            <table class="table table-responsive-sm table-bordered">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -36,11 +36,11 @@
                             <td>@user.Role</td>
                             <td>@user.CreatedOn.Value.ToShortDateString()</td>
                             <td class="text-right">
-                                <a href="adminUsers/edit/@user.Id" class="btn btn-light btn-sm">
-                                    <i class="oi oi-pencil mr-1 text-info"></i> Edit
+                                <a href="adminUsers/@user.Id/edit" class="btn btn-light btn-sm">
+                                    <i class="oi oi-pencil mr-1 text-info"></i>
                                 </a>
-                                <button onclick="" class="btn btn-light btn-sm">
-                                    <i class="oi oi-trash mr-1 text-danger"></i> Delete
+                                <button @onclick="()=>Delete(user.Id)" class="btn btn-light btn-sm">
+                                    <i class="oi oi-trash mr-1 text-danger"></i>
                                 </button>
                             </td>
                         </tr>
@@ -73,6 +73,13 @@
         adminUsers = reponses;
         MetaData = reponses.MetaData;
         loading = false;
+    }
+
+    public async Task Delete(Guid id)
+    {
+        Console.WriteLine(id);
+        await adminUserService.Delete(id);
+        await Load();
     }
 
     protected override async Task OnInitializedAsync()

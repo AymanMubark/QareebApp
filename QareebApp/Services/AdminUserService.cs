@@ -1,5 +1,5 @@
-﻿using Qareeb.Shared.Entities;
-using Qareeb.Shared.Models;
+﻿using Qareeb.Shared.Models;
+using QareebApp.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,10 @@ namespace QareebApp.Services
     public interface IAdminUserService
     {
         Task<PagedList<AdminUserReponse>> GetAll(PagingRequest model);
+        Task<AdminUserReponse> UpdateAdminUser(Guid id,AdminUserUpdateRequest model);
+        Task<AdminUserReponse> AddAdminUser(AddAdminFrom model);
+        Task Delete(Guid id);
+        Task<AdminUserReponse> GetById(Guid id);
     }
 
     public class AdminUserService : IAdminUserService
@@ -23,9 +27,31 @@ namespace QareebApp.Services
             _httpService = httpService;
         }
 
+        public async Task<AdminUserReponse> AddAdminUser(AddAdminFrom model)
+        {
+            var response = await _httpService.PostFormData<AdminUserReponse>($"/api/AdminUsers",model);
+            return response;
+        }
+
+        public async Task Delete(Guid id)
+        {
+            await _httpService.Delete($"/api/AdminUsers/{id}");
+        }
+
         public async Task<PagedList<AdminUserReponse>> GetAll(PagingRequest model)
         {
             var response =  await _httpService.GetListPaging<AdminUserReponse>($"/api/AdminUsers?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
+            return response;
+        }
+
+        public  async Task<AdminUserReponse> GetById(Guid id)
+        {
+            return await _httpService.Get<AdminUserReponse>($"/api/AdminUsers/{id}");
+        }
+
+        public async Task<AdminUserReponse> UpdateAdminUser(Guid id,AdminUserUpdateRequest model)
+        {
+            var response = await _httpService.Put<AdminUserReponse>($"/api/AdminUsers/{id}", model);
             return response;
         }
     }

@@ -37,10 +37,10 @@
                             <td>@order.CreatedOn.Value.ToShortDateString()</td>
                             <td class="text-right">
                                 <a href="orders/edit/@order.Id" class="btn btn-light btn-sm">
-                                    <i class="oi oi-pencil mr-1 text-info"></i> Edit
+                                    <i class="oi oi-pencil mr-1 text-info"></i> 
                                 </a>
                                 <button onclick="" class="btn btn-light btn-sm">
-                                    <i class="oi oi-trash mr-1 text-danger"></i> Delete
+                                    <i class="oi oi-trash mr-1 text-danger"></i> 
                                 </button>
                             </td>
                         </tr>
@@ -60,7 +60,7 @@
     protected MetaData MetaData = new MetaData();
     protected PagingRequest model = new PagingRequest()
     {
-        PageSize = 1,
+        PageSize = 5,
     };
 
     private async Task SelectedPage(int page)

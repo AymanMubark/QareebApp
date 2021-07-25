@@ -1,0 +1,106 @@
+﻿@page "/adminusers/{id}/edit"
+@inject IAdminUserService adminUserService
+@inject NavigationManager NavigationManager
+
+<div class="card bg-white">
+    <div class="card-header  d-flex justify-content-between align-items-center" style="background-color:white;">
+        <h5>
+            <i class="oi oi-people mr-2"></i>
+            Edit Admin User
+        </h5>
+    </div>
+    <div class="card-body">
+        @if (loading)
+        {
+            <div class="text-center">
+                <span class="spinner-border"></span>
+            </div>
+        }
+        else
+        {
+            <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+                <div class="form-group row">
+                    <label for="Name" class="col-md-12 col-form-label">Name</label>
+                    <div class="col-md-12">
+                        <InputText @bind-Value="model.Name" class="form-control" id="Name" />
+                        <ValidationMessage For="@(() => model.Name)" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="Phone" class="col-md-12 col-form-label">Phone</label>
+                    <div class="col-md-12">
+                        <InputText @bind-Value="model.Phone" class="form-control" id="Phone" />
+                        <ValidationMessage For="@(() => model.Phone)" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="Email" class="col-md-12 col-form-label">Email</label>
+                    <div class="col-md-12">
+                        <InputText @bind-Value="model.Email" class="form-control" id="Email" />
+                        <ValidationMessage For="@(() => model.Email)" />
+                    </div>
+                </div>
+                <div class="form-group row mb-0">
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-success">
+                            Update @if (loadingSubmit)
+                            {
+                                <span class="spinner-border"></span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private bool loading;
+    private bool loadingSubmit;
+    protected AdminUserUpdateRequest model;
+    private string error;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+
+
+    public async Task Load()
+    {
+        loading = true;
+        var response = await adminUserService.GetById(Guid.Parse(id));
+        model = new AdminUserUpdateRequest()
+        {
+            Name = response.Name,
+            Email = response.Email,
+            Phone = response.Phone,
+        };
+        loading = false;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            loadingSubmit = true;
+            var reponses = await adminUserService.UpdateAdminUser(Guid.Parse(id), model);
+            if (reponses != null)
+            {
+                NavigationManager.NavigateTo("/adminUsers");
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            loadingSubmit = false;
+            StateHasChanged();
+        }
+    }
+
+}

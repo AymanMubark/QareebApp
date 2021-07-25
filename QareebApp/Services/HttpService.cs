@@ -14,13 +14,19 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using static QareebApp.Services.LocalStorageService;
 using QareebApp.Shared;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Components.Forms;
+
 namespace QareebApp.Services
 {
     public interface IHttpService
     {
         Task<T> Get<T>(string uri);
+        Task Delete(string uri);
         public Task<PagedList<T>> GetListPaging<T>(string uri);
         Task<T> Post<T>(string uri, object value);
+        Task<T> Put<T>(string uri, object value);
+        Task<T> PostFormData<T>(string uri, object value);
     }
 
     public class HttpService : IHttpService
@@ -44,10 +50,10 @@ namespace QareebApp.Services
         }
 
 
-        public Task<T> Get<T>(string uri)
-        {
+        public async Task<T> Get<T>(string uri)
+        {           
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            return null;
+            return await sendRequestWithData<T>(request);
         }
 
 
@@ -65,6 +71,13 @@ namespace QareebApp.Services
             return default;
         }
 
+        public async Task<T> Put<T>(string uri, object value)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Put, uri);
+            request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
+            return await sendRequestWithData<T>(request);
+        }
+
         public async Task<T> Post<T>(string uri, object value)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
@@ -72,7 +85,33 @@ namespace QareebApp.Services
             return await sendRequestWithData<T>(request);
         }
 
-        // helper methods
+        public async Task<T> PostFormData<T>(string uri, object data)
+        {
+            var content = new MultipartFormDataContent();
+            content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+
+            foreach (var prop in data.GetType().GetProperties())
+            {
+                var value = prop.GetValue(data);
+                if (value != null)
+                {
+                    if (value is IBrowserFile)
+                    {
+                        var file = value as IBrowserFile;
+                        content.Add(new StreamContent(file.OpenReadStream()), prop.Name, file.Name);
+                    }
+                    else
+                    {
+                        content.Add(new StringContent(value.ToString()), prop.Name);
+                    }
+                }
+            }
+            var request = new HttpRequestMessage(HttpMethod.Post, uri)
+            {
+                Content = content,
+            };
+            return await sendRequestWithData<T>(request);
+        }
 
 
         private async Task<T> sendRequestWithData<T>(HttpRequestMessage request)
@@ -107,6 +146,10 @@ namespace QareebApp.Services
             return response;
         }
 
-
+        public async Task Delete(string uri)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, uri);
+            await sendRequest(request);
+        }
     }
 }
