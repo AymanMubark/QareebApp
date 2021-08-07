@@ -6,9 +6,6 @@
             <i class="oi oi-people mr-2"></i>
             Orders
         </h5>
-        <a href="adminusers/create" class="btn ml-auto btn-sm btn-success">
-            <i aria-hidden="true" class="oi oi-plus mr-2"></i> Add User
-        </a>
     </div>
     <div class="card-body">
         @if (orders == null)
@@ -17,7 +14,7 @@
         }
         else
         {
-            <table class="table table-responsive-sm table-borderless">
+            <table class="table table-responsive-sm table-bordered">
                 <thead>
                     <tr>
                         <th>Name</th>
