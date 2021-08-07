@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace QareebApp.Features
 {
-    public class AddAdminFrom 
+    public class CreateAdminForm 
     {
         public string Name { get; set; }
         public IBrowserFile Image { get; set; }

@@ -89,7 +89,7 @@
         try
         {
             loadingSubmit = true;
-            var reponses = await adminUserService.UpdateAdminUser(Guid.Parse(id), model);
+            var reponses = await adminUserService.Update(Guid.Parse(id), model);
             if (reponses != null)
             {
                 NavigationManager.NavigateTo("/adminUsers");

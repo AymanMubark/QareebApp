@@ -23,6 +23,7 @@ namespace QareebApp
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IAdminUserService, AdminUserService>()
                 .AddScoped<IOrderService, OrderService>()
+                .AddScoped<IDriverService, DriverService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>();
             var apiUrl = new Uri(builder.Configuration["apiUrl"]);

@@ -12,10 +12,10 @@ namespace QareebApp.Services
     public interface IAdminUserService
     {
         Task<PagedList<AdminUserReponse>> GetAll(PagingRequest model);
-        Task<AdminUserReponse> UpdateAdminUser(Guid id,AdminUserUpdateRequest model);
-        Task<AdminUserReponse> AddAdminUser(AddAdminFrom model);
-        Task Delete(Guid id);
+        Task<AdminUserReponse> Update(Guid id,AdminUserUpdateRequest model);
+        Task<AdminUserReponse> Create(CreateAdminForm model);
         Task<AdminUserReponse> GetById(Guid id);
+        Task Delete(Guid id);
     }
 
     public class AdminUserService : IAdminUserService
@@ -27,7 +27,7 @@ namespace QareebApp.Services
             _httpService = httpService;
         }
 
-        public async Task<AdminUserReponse> AddAdminUser(AddAdminFrom model)
+        public async Task<AdminUserReponse> Create(CreateAdminForm model)
         {
             var response = await _httpService.PostFormData<AdminUserReponse>($"/api/AdminUsers",model);
             return response;
@@ -49,7 +49,7 @@ namespace QareebApp.Services
             return await _httpService.Get<AdminUserReponse>($"/api/AdminUsers/{id}");
         }
 
-        public async Task<AdminUserReponse> UpdateAdminUser(Guid id,AdminUserUpdateRequest model)
+        public async Task<AdminUserReponse> Update(Guid id,AdminUserUpdateRequest model)
         {
             var response = await _httpService.Put<AdminUserReponse>($"/api/AdminUsers/{id}", model);
             return response;
