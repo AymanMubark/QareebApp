@@ -213,7 +213,7 @@
       "url": "_framework\/Qareeb.Shared.dll"
     },
     {
-      "hash": "sha256-fnixQBxFzAwTDvgcCImRvRwylaSXGFLrYZibnpTxssM=",
+      "hash": "sha256-iAVor3X2SUOSRVvutWpVZGYQ6N3vtCigXEwUxz8e438=",
       "url": "_framework\/QareebApp.dll"
     },
     {
@@ -349,7 +349,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-LFCHDDKwwDCQ\/eBc6xg4qgyDG991Nt6ydKkLbKPQ5\/U=",
+      "hash": "sha256-eSFV42NGxvecrjeAlKmrIwCdKdfr7jXbqVGG4YGmUsc=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -357,5 +357,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "9IsXGdA3"
+  "version": "M7j6Dj9x"
 };
