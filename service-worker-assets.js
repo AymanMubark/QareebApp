@@ -209,11 +209,11 @@
       "url": "_framework\/System.IO.Pipelines.dll"
     },
     {
-      "hash": "sha256-me01cj402DfVL5zqNQvX1JCQZdDjHv5\/\/kN1cLhYsEo=",
+      "hash": "sha256-gyBnOR4+MZv2s4t9cUiIJYu+h+K5BXA5JAhTktXaY7c=",
       "url": "_framework\/Qareeb.Shared.dll"
     },
     {
-      "hash": "sha256-I1NMZX35XaKnuVzL3iiyrYli0mUDapJMyoq1UmCWE6o=",
+      "hash": "sha256-b+tltLqheJmb1krOzwkbpxU9u3fJCptHnRE7E5efpzk=",
       "url": "_framework\/QareebApp.dll"
     },
     {
@@ -349,7 +349,7 @@
       "url": "_framework\/System.Private.CoreLib.dll"
     },
     {
-      "hash": "sha256-s2CTxWtSpnauVKjOQPvFp3ZzCsReNtLWuJKfRkFdwMU=",
+      "hash": "sha256-\/8u1vypipSEg\/TJfG6D3fLFbzQwfn+qW0EYxYgJutDE=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -357,5 +357,5 @@
       "url": "_framework\/blazor.webassembly.js"
     }
   ],
-  "version": "q2G9RYMP"
+  "version": "+cqPekWE"
 };
