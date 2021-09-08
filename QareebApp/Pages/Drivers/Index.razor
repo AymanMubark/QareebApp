@@ -86,7 +86,7 @@
     public async Task Load()
     {
         loading = true;
-        var reponses = await driverService.GetDrivers(model);
+        var reponses = await driverService.GetAll(model);
         drivers = reponses;
         MetaData = reponses.MetaData;
         loading = false;

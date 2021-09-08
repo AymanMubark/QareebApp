@@ -26,7 +26,8 @@ namespace QareebApp.Services
         public Task<PagedList<T>> GetListPaging<T>(string uri);
         Task<T> Post<T>(string uri, object value);
         Task<T> Put<T>(string uri, object value);
-        Task<T> PostFormData<T>(string uri, object value);
+        Task<T> PostFormData<T>(string uri, object data);
+        Task<T> PutFormData<T>(string uri, object data);
     }
 
     public class HttpService : IHttpService
@@ -150,6 +151,34 @@ namespace QareebApp.Services
         {
             var request = new HttpRequestMessage(HttpMethod.Delete, uri);
             await sendRequest(request);
+        }
+
+        public async Task<T> PutFormData<T>(string uri, object data)
+        {
+            var content = new MultipartFormDataContent();
+            content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+
+            foreach (var prop in data.GetType().GetProperties())
+            {
+                var value = prop.GetValue(data);
+                if (value != null)
+                {
+                    if (value is IBrowserFile)
+                    {
+                        var file = value as IBrowserFile;
+                        content.Add(new StreamContent(file.OpenReadStream()), prop.Name, file.Name);
+                    }
+                    else
+                    {
+                        content.Add(new StringContent(value.ToString()), prop.Name);
+                    }
+                }
+            }
+            var request = new HttpRequestMessage(HttpMethod.Put, uri)
+            {
+                Content = content,
+            };
+            return await sendRequestWithData<T>(request);
         }
     }
 }
