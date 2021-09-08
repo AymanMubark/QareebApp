@@ -1,0 +1,61 @@
+﻿@page "/Orders"
+@inject IOrderService orderService
+<MudHidden Breakpoint="Breakpoint.SmAndDown">
+    <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Orders</MudText>
+</MudHidden>
+
+<MudTable Items="@orders" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" LoadingProgressColor="Color.Info">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Table</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Code</MudTh>
+        <MudTh>C.Name</MudTh>
+        <MudTh>Delivery Amount</MudTh>
+        <MudTh>CreatedOn</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Code">@context.Code</MudTd>
+        <MudTd DataLabel="Name">@context.Customer.Name</MudTd>
+        <MudTd DataLabel="Delivery Amount">@context.DeliveryAmount</MudTd>
+        <MudTd DataLabel="CreatedOn">@context.CreatedOn.Value</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudPagination SelectedChanged="SelectedPage" Count="@MetaData.TotalPages" Class="pa-4" />
+    </PagerContent>
+</MudTable>
+
+
+@code {
+    private bool loading;
+    protected IEnumerable<OrderResponse> orders;
+    protected MetaData MetaData = new MetaData();
+    public string searchString1 { get; set; }
+
+    protected PagingRequest model = new PagingRequest()
+    {
+        PageSize = 5,
+    };
+
+    private async Task SelectedPage(int page)
+    {
+        model.PageNumber = page;
+        await Load();
+    }
+
+    public async Task Load()
+    {
+        loading = true;
+        var reponses = await orderService.GetOrders(model);
+        orders = reponses;
+        MetaData = reponses.MetaData;
+        loading = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+}

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 using QareebApp.Services;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace QareebApp
                 .AddScoped<ILocalStorageService, LocalStorageService>();
             var apiUrl = new Uri(builder.Configuration["apiUrl"]);
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = apiUrl });
+
+            builder.Services.AddMudServices();
 
             var host = builder.Build();
 

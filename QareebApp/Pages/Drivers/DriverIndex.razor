@@ -1,0 +1,72 @@
+﻿@page "/Drivers"
+@inject IDriverService driverService
+@inject IConfiguration configuration
+<MudGrid>
+    <MudItem>
+        <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Drivers</MudText>
+    </MudItem>
+    <MudSpacer />
+    <MudItem>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/drivers/create" Style="margin-bottom:20px">Add Driver</MudButton>
+    </MudItem>
+</MudGrid>
+<MudTable Items="@drivers" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" Style="" LoadingProgressColor="Color.Info">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Table</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Phone</MudTh>
+        <MudTh>Role</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Image">
+            <CardHeaderAvatar>
+                <MudAvatar Image="@(@configuration["apiUrl"] +"/"+ context.Image)" />
+            </CardHeaderAvatar>
+        </MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="Phone">@context.Phone</MudTd>
+        <MudTd DataLabel="Role">@context.CreatedOn.Value.ToShortDateString()</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudPagination SelectedChanged="SelectedPage" Count="@MetaData.TotalPages" Class="pa-4" />
+    </PagerContent>
+</MudTable>
+
+
+@code {
+    private bool loading;
+    protected IEnumerable<DriverResponse> drivers;
+    protected MetaData MetaData = new MetaData();
+    public string searchString1 { get; set; }
+    protected PagingRequest model = new PagingRequest()
+    {
+        PageSize = 5,
+    };
+
+    private async Task SelectedPage(int page)
+    {
+        model.PageNumber = page;
+        await Load();
+    }
+
+    public async Task Load()
+    {
+        loading = true;
+        var reponses = await driverService.GetAll(model);
+        drivers = reponses;
+        MetaData = reponses.MetaData;
+        loading = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
+}
