@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject IAuthenticationService AuthenticationService
+@inject IConfiguration configuration
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -22,16 +23,16 @@
         </MudHidden>
         <MudSpacer />
         @*<MudMenu Icon="@Icons.Material.Outlined.Translate" Color="Color.Inherit" Direction="Direction.Bottom" OffsetY="true" Dense="true">
-            <MudMenuItem>English</MudMenuItem>
-            <MudMenuItem>Swedish</MudMenuItem>
-            <MudMenuItem>Old Norse</MudMenuItem>
-        </MudMenu>*@
+                <MudMenuItem>English</MudMenuItem>
+                <MudMenuItem>Swedish</MudMenuItem>
+                <MudMenuItem>Old Norse</MudMenuItem>
+            </MudMenu>*@
         <MudMenu Direction="Direction.Left" OffsetX="true" Dense="true" Class="mt-1 ml-4">
             <ActivatorContent>
-                <MudAvatar Image="@AuthenticationService.User.Image" />
+                <MudAvatar Image="@(configuration["apiUrl"] +"/"+ AuthenticationService.User?.Image)" />
             </ActivatorContent>
             <ChildContent>
-                <PersonCard  Class="mt-n2" />
+                <PersonCard Class="mt-n2" />
                 <MudDivider Class="mb-2" />
                 <MudListItem Text="Account" Icon="@Icons.Material.Outlined.Person" Href="/personal/account" />
                 <MudListItem Text="Logout" Icon="@Icons.Material.Outlined.Login" Href="/logout" />
@@ -45,7 +46,7 @@
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudToolBar DisableGutters="true">
                 <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3" />
-               @* <MudText>@NavigationManager.ToBaseRelativePath(NavigationManager.Uri)</MudText>*@
+                @* <MudText>@NavigationManager.ToBaseRelativePath(NavigationManager.Uri)</MudText>*@
                 <MudSpacer />
             </MudToolBar>
         </MudHidden>
@@ -57,7 +58,7 @@
 
 
 @code {
- 
+
 
     public bool _drawerOpen = true;
     public bool _themeManagerOpen = false;
@@ -78,5 +79,5 @@
         StateHasChanged();
     }
 
- 
+
 }

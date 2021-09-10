@@ -1,9 +1,10 @@
 ﻿@inject IAuthenticationService AuthenticationService
+@inject IConfiguration configuration
 
 <MudCard Elevation="0" Square="true" Class="@Class" Style="@Style">
     <MudCardHeader>
         <CardHeaderAvatar>
-            <MudAvatar Image="@AuthenticationService.User.Image" />
+            <MudAvatar Image="@(configuration["apiUrl"] +"/"+ AuthenticationService.User?.Image)" />
         </CardHeaderAvatar>
         <CardHeaderContent>
             <MudText Typo="Typo.body2">@AuthenticationService.User.UserName</MudText>

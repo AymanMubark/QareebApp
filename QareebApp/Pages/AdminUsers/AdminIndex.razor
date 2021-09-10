@@ -1,6 +1,7 @@
 ﻿@page "/adminusers"
 @inject IAdminUserService adminUserService
 @inject NavigationManager NavigationManager
+@inject IConfiguration configuration
 
 <MudGrid>
     <MudItem>
@@ -18,6 +19,7 @@
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
+        <MudTh></MudTh>
         <MudTh>Name</MudTh>
         <MudTh>Email</MudTh>
         <MudTh>Phone</MudTh>
@@ -25,6 +27,11 @@
         <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd DataLabel="Image">
+            <CardHeaderAvatar>
+                <MudAvatar Image="@(configuration["apiUrl"] +"/"+ context.Image)" />
+            </CardHeaderAvatar>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Email">@context.Email</MudTd>
         <MudTd DataLabel="Phone">@context.Phone</MudTd>
