@@ -2,71 +2,55 @@
 @inject IAdminUserService adminUserService
 @inject NavigationManager NavigationManager
 
-<div class="card bg-white">
-    <div class="card-header  d-flex justify-content-between align-items-center" style="background-color:white;">
-        <h5>
-            <i class="oi oi-people mr-2"></i>
-            Create Admin User
-        </h5>
-    </div>
-    <div class="card-body">
-        <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
-            <div class="form-group row">
-                <label for="Name" class="col-md-12 col-form-label">Name</label>
-                <div class="col-md-12">
-                    <InputText @bind-Value="model.Name" class="form-control" id="Name" />
-                    <ValidationMessage For="@(() => model.Name)" />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="Phone" class="col-md-12 col-form-label">Phone</label>
-                <div class="col-md-12">
-                    <InputText @bind-Value="model.Phone" class="form-control" id="Phone" />
-                    <ValidationMessage For="@(() => model.Phone)" />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="Email" class="col-md-12 col-form-label">Email</label>
-                <div class="col-md-12">
-                    <InputText @bind-Value="model.Email" class="form-control" id="Email" />
-                    <ValidationMessage For="@(() => model.Email)" />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="Image" class="col-md-12 col-form-label">Image</label>
-                <div class="col-md-12">
-                    <InputFile OnChange="@LoadFile" id="" />
-                    <ValidationMessage For="@(() => model.Image)" />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="Name" class="col-md-12 col-form-label">UserName</label>
-                <div class="col-md-12">
-                    <InputText @bind-Value="model.UserName" class="form-control" id="UserName" />
-                    <ValidationMessage For="@(() => model.UserName)" />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="password" class="col-md-12 col-form-label">Password</label>
-                <div class="col-md-12">
-                    <InputText type="password" @bind-Value="model.Password" class="form-control" id="password" />
-                    <ValidationMessage For="@(() => model.Password)" />
-                </div>
-            </div>
-            <div class="form-group row mb-0">
-                <div class="col-md-12">
-                    <button type="submit" class="btn btn-success">
-                        Add @if (loading)
-                        {
-                            <span class="spinner-border"></span>
-                        }
-                    </button>
-                </div>
-            </div>
-        </EditForm>
-    </div>
-</div>
-
+<MudCard Breakpoint="Breakpoint.SmAndDown">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add Driver</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <MudAlert Severity="Severity.Error">@error</MudAlert>
+        }
+        <MudForm Model="@model" @onsubmit="HandleValidSubmit">
+            <MudItem>
+                <MudTextField @bind-Value="model.Name" Label="Name" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+            <MudItem>
+                <MudTextField @bind-Value="model.Phone" InputType="InputType.Telephone" Label="Phone" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+            <MudItem>
+                <MudTextField @bind-Value="model.Email" InputType="InputType.Email" Label="Email" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+            <MudItem Style="margin-top:20px" md="4">
+                <InputFile id="fileInput112" OnChange="LoadFile" hidden accept=".jpg, .jpeg, .png" />
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="fileInput112">
+                    Upload your images
+                </MudButton>
+            </MudItem>
+            @if (model.Image != null)
+            {
+                <MudListItem Icon="@Icons.Filled.AttachFile">
+                    @model.Image.Name <code>@model.Image.Size bytes</code>
+                </MudListItem>
+            }
+            <MudItem>
+                <MudTextField @bind-Value="@model.UserName" Label="UserName" Variant="Variant.Outlined" Class="my-6"></MudTextField>
+            </MudItem>
+            <MudItem>
+                <MudTextField @bind-Value="@model.Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+            </MudItem>
+            <MudItem>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit"  Class="my-6" Size="Size.Large" FullWidth="true">Save</MudButton>
+            </MudItem>
+        </MudForm>
+    </MudCardContent>
+</MudCard>
 
 @code {
     private bool loading;
@@ -102,6 +86,28 @@
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
+        }
+    }
+
+
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
         }
     }
 }
