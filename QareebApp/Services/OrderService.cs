@@ -20,7 +20,7 @@ namespace QareebApp.Services
         }
         public async Task<PagedList<OrderResponse>> GetOrders(PagingRequest model = null)
         {
-            return await _httpService.GetListPaging<OrderResponse>($"/api/Orders/all?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
+            return await _httpService.GetListPaging<OrderResponse>($"/api/Orders/all?SearchKey={model.SearchKey}&PageNumber={model.PageNumber}&PageSize={model.PageSize}");
         }
     }
 }

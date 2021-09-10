@@ -12,6 +12,7 @@ namespace QareebApp.Services
         public Task<PagedList<DriverResponse>> GetAll(PagingRequest model = null);
         public Task<DriverResponse> Create(CreateDriverForm model);
         public Task<DriverResponse> Edit(Guid id,CreateDriverForm model);
+        public Task Delete(Guid id);
         public Task<DriverResponse> Get(Guid id);
     }
     public class DriverService : IDriverService
@@ -24,7 +25,7 @@ namespace QareebApp.Services
         }
         public async Task<PagedList<DriverResponse>> GetAll(PagingRequest model = null)
         {
-            return await _httpService.GetListPaging<DriverResponse>($"/api/Drivers/all?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
+            return await _httpService.GetListPaging<DriverResponse>($"/api/Drivers/all?SearchKey={model.SearchKey}&PageNumber={model.PageNumber}&PageSize={model.PageSize}");
         }
         public async Task<DriverResponse> Create(CreateDriverForm model)
         {
@@ -40,6 +41,11 @@ namespace QareebApp.Services
         public async Task<DriverResponse> Get(Guid id)
         {
             return await _httpService.Get<DriverResponse>($"/api/Drivers/{id}");
+        }
+
+        public async Task Delete(Guid id)
+        {
+             await _httpService.Delete($"/api/Drivers/{id}");
         }
     }
 }

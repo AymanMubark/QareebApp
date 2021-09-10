@@ -40,7 +40,7 @@ namespace QareebApp.Services
 
         public async Task<PagedList<AdminUserReponse>> GetAll(PagingRequest model)
         {
-            var response =  await _httpService.GetListPaging<AdminUserReponse>($"/api/AdminUsers?PageNumber={model.PageNumber}&PageSize={model.PageSize}");
+            var response =  await _httpService.GetListPaging<AdminUserReponse>($"/api/AdminUsers?SearchKey={model.SearchKey}&PageNumber={model.PageNumber}&PageSize={model.PageSize}");
             return response;
         }
 

@@ -1,20 +1,23 @@
 ﻿@page "/Drivers"
 @inject IDriverService driverService
 @inject IConfiguration configuration
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+
 <MudGrid>
     <MudItem>
         <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Drivers</MudText>
     </MudItem>
     <MudSpacer />
     <MudItem>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/drivers/create" Style="margin-bottom:20px">Add Driver</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="drivers/create" Style="margin-bottom:20px">Add Driver</MudButton>
     </MudItem>
 </MudGrid>
 <MudTable Items="@drivers" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@loading" Style="" LoadingProgressColor="Color.Info">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Table</MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh></MudTh>
@@ -22,20 +25,25 @@
         <MudTh>Email</MudTh>
         <MudTh>Phone</MudTh>
         <MudTh>Role</MudTh>
+        <MudTh>Auctions</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Image">
             <CardHeaderAvatar>
-                <MudAvatar Image="@(@configuration["apiUrl"] +"/"+ context.Image)" />
+                <MudAvatar Image="@(configuration["apiUrl"] +"/"+ context.Image)" />
             </CardHeaderAvatar>
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Email">@context.Email</MudTd>
         <MudTd DataLabel="Phone">@context.Phone</MudTd>
         <MudTd DataLabel="Role">@context.CreatedOn.Value.ToShortDateString()</MudTd>
+        <MudTd DataLabel="Auctions">
+            <MudIconButton Color="Color.Warning" Icon="@Icons.Material.Filled.Edit" OnClick='() => NavigationManager.NavigateTo($"drivers/edit/{context.Id}")' />
+            <MudIconButton Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" OnClick="()=>Delete(context.Id)" />
+        </MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudPagination SelectedChanged="SelectedPage" Count="@MetaData.TotalPages" Class="pa-4" />
+        <MudPagination SelectedChaned="SelectedPage" Count="@MetaData.TotalPages" Class="pa-4" />
     </PagerContent>
 </MudTable>
 
@@ -44,11 +52,17 @@
     private bool loading;
     protected IEnumerable<DriverResponse> drivers;
     protected MetaData MetaData = new MetaData();
-    public string searchString1 { get; set; }
     protected PagingRequest model = new PagingRequest()
     {
         PageSize = 5,
     };
+
+
+    private async Task OnSearch(string text)
+    {
+        model.SearchKey = text;
+        await Load();
+    }
 
     private async Task SelectedPage(int page)
     {
@@ -68,5 +82,28 @@
     protected override async Task OnInitializedAsync()
     {
         await Load();
+    }
+
+    async Task Delete(Guid id)
+    {
+        var parameters = new DialogParameters();
+
+        parameters.Add("ContentText", "Do you really want to delete these records? This process cannot be undone.");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var result = await DialogService.Show<ConfirmDialog>("Delete", parameters, new DialogOptions
+        {
+            FullWidth = true,
+        }).Result;
+        if (!result.Cancelled)
+        {
+            if ((bool)(result.Data ?? false))
+            {
+                await driverService.Delete(id);
+                await Load();
+            }
+        }
     }
 }

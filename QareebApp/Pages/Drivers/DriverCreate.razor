@@ -1,82 +1,83 @@
 ﻿@page "/drivers/create"
 @inject IDriverService driverService
 @inject NavigationManager NavigationManager
-    <MudCard Breakpoint="Breakpoint.SmAndDown">
-        <MudCardHeader>
-            <CardHeaderContent>
-                <MudText Typo="Typo.h6">Add Driver</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            @if (!string.IsNullOrEmpty(error))
-            {
-                <div class="alert alert-danger mt-3 mb-0">@error</div>
-            }
-            <MudForm Model="@model" @onsubmit="HandleValidSubmit">
-                <MudItem>
-                    <MudTextField @bind-Value="model.Name" Label="Name" Variant="Variant.Text"></MudTextField>
-                </MudItem>
-                <MudItem>
-                    <MudTextField InputType="InputType.Telephone" @bind-Value="model.Phone" Label="Phone" Variant="Variant.Text"></MudTextField>
-                </MudItem>
-                <MudItem>
-                    <MudTextField InputType="InputType.Email" @bind-Value="model.Email" Label="Email" Variant="Variant.Text"></MudTextField>
-                </MudItem>
-                <MudItem Style="margin-top:20px" md="4">
-                    <InputFile id="fileInput112" OnChange="LoadFile" hidden accept=".jpg, .jpeg, .png" />
-                    <MudButton HtmlTag="label"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               StartIcon="@Icons.Filled.CloudUpload"
-                               for="fileInput112">
-                        Upload your images
-                    </MudButton>
-                </MudItem>
-                @if (model.Image != null)
-                {
-                    <MudListItem Icon="@Icons.Filled.AttachFile">
-                        @model.Image.Name <code>@model.Image.Size bytes</code>
-                    </MudListItem>
-                }
-                <MudButton  Style="margin-top:20px" Variant="Variant.Filled" Color="Color.Success" ButtonType="ButtonType.Submit" FullWidth="true">Save</MudButton>
-            </MudForm>
-        </MudCardContent>
-    </MudCard>
-    @code {
-        private bool loading;
-        protected CreateDriverForm model = new CreateDriverForm();
-        private string error;
-
-        private async Task HandleValidSubmit()
+<MudCard Breakpoint="Breakpoint.SmAndDown">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Add Driver</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (!string.IsNullOrEmpty(error))
         {
-            try
+            <MudAlert Severity="Severity.Error">@error</MudAlert>
+        }
+        <MudForm Model="@model" @onsubmit="HandleValidSubmit">
+            <MudItem>
+                <MudTextField @bind-Value="model.Name" Label="Name" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+            <MudItem>
+                <MudTextField InputType="InputType.Telephone" @bind-Value="model.Phone" Label="Phone" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+            <MudItem>
+                <MudTextField InputType="InputType.Email" @bind-Value="model.Email" Label="Email" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+            <MudItem Style="margin-top:20px" md="4">
+                <InputFile id="fileInput112" OnChange="LoadFile" hidden accept=".jpg, .jpeg, .png" />
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Filled.CloudUpload"
+                           for="fileInput112">
+                    Upload your images
+                </MudButton>
+            </MudItem>
+            @if (model.Image != null)
             {
-                loading = true;
-                var reponses = await driverService.Create(model);
-                if (reponses != null)
-                {
-                    NavigationManager.NavigateTo("/drivers");
-                }
+                <MudListItem Icon="@Icons.Filled.AttachFile">
+                    @model.Image.Name <code>@model.Image.Size bytes</code>
+                </MudListItem>
             }
-            catch (Exception ex)
+            <MudButton Style="margin-top:20px" Variant="Variant.Filled" Color="Color.Success" ButtonType="ButtonType.Submit" FullWidth="true">Save</MudButton>
+        </MudForm>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private bool loading;
+    protected CreateDriverForm model = new CreateDriverForm();
+    private string error;
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            loading = true;
+            var reponses = await driverService.Create(model);
+            if (reponses != null)
             {
-                error = ex.Message;
-                loading = false;
-                StateHasChanged();
+                NavigationManager.NavigateTo("/drivers");
             }
         }
-
-        private void LoadFile(InputFileChangeEventArgs e)
+        catch (Exception ex)
         {
-
-            try
-            {
-                Console.WriteLine(e.File.Name);
-                model.Image = e.File;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            error = ex.Message;
+            loading = false;
+            StateHasChanged();
         }
     }
+
+    private void LoadFile(InputFileChangeEventArgs e)
+    {
+
+        try
+        {
+            Console.WriteLine(e.File.Name);
+            model.Image = e.File;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
