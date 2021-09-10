@@ -49,6 +49,7 @@
 
     private async Task OnSearch(string text)
     {
+        model.PageNumber = 1;
         model.SearchKey = text;
         await Load();
     }
