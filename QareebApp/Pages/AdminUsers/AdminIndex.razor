@@ -42,7 +42,7 @@
         </MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudPagination SelectedChanged="SelectedPage" Count="@MetaData.TotalPages" Class="pa-4" />
+        <MudPagination Selected=@MetaData.CurrentPage SelectedChanged="SelectedPage" Count="@MetaData.TotalPages" Class="pa-4" />
     </PagerContent>
 </MudTable>
 
